@@ -49,79 +49,79 @@ spec:
             - name: GOOGLE_PROJECT_ID
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.app.googleSecretName }}
+                  name: {{ .Values.secrets.googleSecretName }}
                   key: GOOGLE_PROJECT_ID
             - name: GCS_BUCKET_NAME
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.app.googleSecretName }}
+                  name: {{ .Values.secrets.googleSecretName }}
                   key: GCS_BUCKET_NAME
             - name: GOOGLE_COOKIE_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.app.googleSecretName }}
+                  name: {{ .Values.secrets.googleSecretName }}
                   key: GOOGLE_COOKIE_SECRET
             - name: GOOGLE_CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.app.googleSecretName }}
+                  name: {{ .Values.secrets.googleSecretName }}
                   key: GOOGLE_CLIENT_SECRET
             - name: GOOGLE_CLIENT_ID
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.app.googleSecretName }}
+                  name: {{ .Values.secrets.googleSecretName }}
                   key: GOOGLE_CLIENT_ID
             # env from smtp credentials
             - name: SMTP_HOST
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.app.smtpSecretName }}
+                  name: {{ .Values.secrets.smtpSecretName }}
                   key: SMTP_HOST
             - name: SMTP_PORT
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.app.smtpSecretName }}
+                  name: {{ .Values.secrets.smtpSecretName }}
                   key: SMTP_PORT
             - name: SMTP_USERNAME
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.app.smtpSecretName }}
+                  name: {{ .Values.secrets.smtpSecretName }}
                   key: SMTP_USERNAME
             - name: SMTP_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.app.smtpSecretName }}
+                  name: {{ .Values.secrets.smtpSecretName }}
                   key: SMTP_PASSWORD
             # env from existing postgres database
             - name: DB_HOST
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.app.dbSecretName }}
+                  name: {{ .Values.secrets.dbSecretName }}
                   key: host
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.app.dbSecretName }}
+                  name: {{ .Values.secrets.dbSecretName }}
                   key: user
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.app.dbSecretName }}
+                  name: {{ .Values.secrets.dbSecretName }}
                   key: password
             - name: POSTGRES_DB
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.app.dbSecretName }}
+                  name: {{ .Values.secrets.dbSecretName }}
                   key: dbname
           ports:
             - name: backend
               containerPort: 3001
           volumeMounts:
-            - name: {{ .Values.app.gcsSecretName }}
+            - name: {{ .Values.secrets.gcsSecretName }}
               mountPath: /config/gcs-credentials.json
               subPath: gcs-credentials.json
               readOnly: true
       volumes:
-        - name: {{ .Values.app.gcsSecretName }}
+        - name: {{ .Values.secrets.gcsSecretName }}
           secret:
-            secretName: {{ .Values.app.gcsSecretName }}
+            secretName: {{ .Values.secrets.gcsSecretName }}

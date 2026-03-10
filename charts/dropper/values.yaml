@@ -1,3 +1,7 @@
+images:
+  backend: dropper-backend:1.0.4
+  frontend: dropper-frontend:1.0.4
+
 appName: "dropper"
 labels: {}
 
@@ -10,7 +14,8 @@ ingress:
     - hostname: "__CHANGE_ME__"
       serviceName: "__CHANGE_ME__"
       servicePort: "__CHANGE_ME__"
-app:
+
+secrets:
   dbSecretName: "__CHANGE_ME__"
   gcsSecretName: "__CHANGE_ME__"
   googleSecretName: "__CHANGE_ME__"

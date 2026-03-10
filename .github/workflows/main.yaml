@@ -19,7 +19,7 @@ jobs:
     secrets: inherit
     uses: ./.github/workflows/_helm-prechecks.yaml
     with:
-      charts_dir: charts
+      charts_dir: charts/dropper
       target_branch: main
   helm-release:
     needs: helm-prechecks
@@ -31,4 +31,4 @@ jobs:
     secrets: inherit
     uses: ./.github/workflows/_helm-release.yaml
     with:
-      charts_dir: charts
+      charts_dir: charts/dropper
