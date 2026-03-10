@@ -30,4 +30,6 @@ jobs:
         run: helm package ${{ inputs.charts_dir }}
 
       - name: Push chart to OCI
-        run: helm push ${{ inputs.charts_dir }}/*.tgz oci://ghcr.io/org/dropper-charts
+        run: |
+          chart_version=$(helm show chart ${{ inputs.charts_dir }}/Chart.yaml -o json | jq -r .version)
+          helm push ${{ inputs.charts_dir }}/*.tgz oci://ghcr.io/org/dropper-charts --version $chart_version
