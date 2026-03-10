@@ -1,0 +1,19 @@
+# https://kubernetes.io/docs/concepts/services-networking/service/
+apiVersion: v1
+kind: Service
+metadata:
+  name: dropper
+  namespace: apps
+  labels:
+    {{ include "dropper.labels" . | nindent 4 }}
+spec:
+  selector:
+    {{ include "dropper.selectorLabels" . | nindent 4 }}
+  type: ClusterIP
+  ports:
+    - name: backend
+      protocol: TCP
+      port: 3001
+    - name: frontend
+      protocol: TCP
+      port: 8000

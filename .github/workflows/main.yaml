@@ -1,0 +1,33 @@
+name: Main
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - "charts/**"
+  pull_request:
+    branches: [ "main" ]
+    paths:
+      - "charts/**"
+
+jobs:
+  helm-prechecks:
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+    secrets: inherit
+    uses: ./.github/workflows/_helm-prechecks.yaml
+    with:
+      charts_dir: charts
+      target_branch: main
+  helm-release:
+    if: github.event_name == 'push'
+    permissions:
+      contents: write
+      packages: write
+      id-token: write
+    secrets: inherit
+    uses: ./.github/workflows/_helm-release.yaml
+    with:
+      charts_dir: charts

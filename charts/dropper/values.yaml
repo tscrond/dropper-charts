@@ -1,0 +1,17 @@
+appName: "dropper"
+labels: {}
+
+ingress:
+  ingressClassName: haproxy
+  annotations: {}
+  tls:
+    secretName: "__CHANGE_ME__"
+  hosts:
+    - hostname: "__CHANGE_ME__"
+      serviceName: "__CHANGE_ME__"
+      servicePort: "__CHANGE_ME__"
+app:
+  dbSecretName: "__CHANGE_ME__"
+  gcsSecretName: "__CHANGE_ME__"
+  googleSecretName: "__CHANGE_ME__"
+  smtpSecretName: "__CHANGE_ME__"

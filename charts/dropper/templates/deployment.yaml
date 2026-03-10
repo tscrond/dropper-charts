@@ -1,0 +1,127 @@
+# https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dropper
+  namespace: apps
+spec:
+  selector:
+    matchLabels:
+      {{ include "dropper.labels" . | nindent 6 }}
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        {{ include "dropper.selectorLabels" . | nindent 8 }}
+    spec:
+      serviceAccountName: dropper
+      terminationGracePeriodSeconds: 10
+      containers:
+        - name: frontend
+          image: {{ .Values.images.frontend }}
+          resources:
+            requests:
+              cpu: 50m
+              memory: 100Mi
+          env:
+            - name: BACKEND_ENDPOINT
+              value: "https://api.dropper-app.win"
+          ports:
+            - name: frontend
+              containerPort: 8000
+        - name: backend
+          image: {{ .Values.images.backend }}
+          resources:
+            requests:
+              cpu: 128m
+              memory: 200Mi
+          env:
+            # static env
+            - name: DROPPER_LISTEN_PORT
+              value: "3001"
+            - name: FRONTEND_ENDPOINT
+              value: "https://dropper-app.win"
+            - name: BACKEND_ENDPOINT
+              value: "https://api.dropper-app.win"
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: /config/gcs-credentials.json
+            # env from google credentials
+            - name: GOOGLE_PROJECT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.app.googleSecretName }}
+                  key: GOOGLE_PROJECT_ID
+            - name: GCS_BUCKET_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.app.googleSecretName }}
+                  key: GCS_BUCKET_NAME
+            - name: GOOGLE_COOKIE_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.app.googleSecretName }}
+                  key: GOOGLE_COOKIE_SECRET
+            - name: GOOGLE_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.app.googleSecretName }}
+                  key: GOOGLE_CLIENT_SECRET
+            - name: GOOGLE_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.app.googleSecretName }}
+                  key: GOOGLE_CLIENT_ID
+            # env from smtp credentials
+            - name: SMTP_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.app.smtpSecretName }}
+                  key: SMTP_HOST
+            - name: SMTP_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.app.smtpSecretName }}
+                  key: SMTP_PORT
+            - name: SMTP_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.app.smtpSecretName }}
+                  key: SMTP_USERNAME
+            - name: SMTP_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.app.smtpSecretName }}
+                  key: SMTP_PASSWORD
+            # env from existing postgres database
+            - name: DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.app.dbSecretName }}
+                  key: host
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.app.dbSecretName }}
+                  key: user
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.app.dbSecretName }}
+                  key: password
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.app.dbSecretName }}
+                  key: dbname
+          ports:
+            - name: backend
+              containerPort: 3001
+          volumeMounts:
+            - name: {{ .Values.app.gcsSecretName }}
+              mountPath: /config/gcs-credentials.json
+              subPath: gcs-credentials.json
+              readOnly: true
+      volumes:
+        - name: {{ .Values.app.gcsSecretName }}
+          secret:
+            secretName: {{ .Values.app.gcsSecretName }}
