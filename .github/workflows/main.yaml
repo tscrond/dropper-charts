@@ -22,6 +22,7 @@ jobs:
       charts_dir: charts
       target_branch: main
   helm-release:
+    needs: helm-prechecks
     if: github.event_name == 'push'
     permissions:
       contents: write
