@@ -1,4 +1,3 @@
 apiVersion: v2
 name: dropper
 version: 1.0.4
-appVersion: 1.0.4
