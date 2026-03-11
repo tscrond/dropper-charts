@@ -32,4 +32,4 @@ jobs:
       - name: Push chart to OCI
         run: |
           chart_version=$(helm show chart ${{ inputs.charts_dir }} | yq -r .version)
-          helm push ${{ inputs.charts_dir }}/*.tgz oci://ghcr.io/tscrond/dropper-charts --version $chart_version
+          helm push ${{ inputs.charts_dir }}/*.tgz oci://ghcr.io/tscrond/dropper-charts
