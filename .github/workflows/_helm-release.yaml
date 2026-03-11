@@ -27,7 +27,7 @@ jobs:
           echo ${{ secrets.GITHUB_TOKEN }} | helm registry login ghcr.io --username ${{ github.actor }} --password-stdin
 
       - name: Package chart
-        run: cd ${{ inputs.charts_dir }} && helm package ${{ inputs.charts_dir }}
+        run: cd ${{ inputs.charts_dir }} && helm package .
 
       - name: Push chart to OCI
         run: |
