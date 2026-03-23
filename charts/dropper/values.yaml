@@ -3,7 +3,17 @@ images:
   frontend: dropper-frontend:1.0.4
 
 appName: "dropper"
+replicas: 1
 labels: {}
+# here specify:
+# podDisruptionBudget:
+#   minAvailable: <your_number>
+# or
+# podDisruptionBudget:
+#   maxUnavailable: <your_number>
+podDisruptionBudget:
+  maxUnavailable: {}
+  minAvailable: {}
 
 ingress:
   ingressClassName: haproxy
